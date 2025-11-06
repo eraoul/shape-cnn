@@ -225,9 +225,17 @@ def compute_loss(
         # Only compute loss on pixels that belong to a shape (non-background)
         non_bg = shape_target > 0
         if non_bg.sum() > 0:
+            # Reshape predictions: (1, num_classes, H, W) -> (H, W, num_classes) -> (H*W, num_classes)
+            shape_pred_flat = shape_pred[0].permute(1, 2, 0).reshape(-1, shape_pred.shape[1])
+            # Flatten target: (1, H, W) -> (H*W,)
+            shape_target_flat = shape_target[0].reshape(-1)
+            # Flatten mask: (1, H, W) -> (H*W,)
+            non_bg_flat = non_bg[0].reshape(-1)
+
+            # Apply mask and compute loss
             shape_loss = F.cross_entropy(
-                shape_pred[:, :, non_bg[0]],
-                shape_target[non_bg],
+                shape_pred_flat[non_bg_flat],
+                shape_target_flat[non_bg_flat],
                 reduction='mean'
             )
         else:
