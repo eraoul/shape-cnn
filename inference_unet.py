@@ -29,7 +29,7 @@ class ShapeDetector:
         num_colors: int = 10,
         max_instances: int = 10,
         num_shape_classes: int = 6,
-        device: str = 'cuda' if torch.cuda.is_available() else 'cpu',
+        device: str = None,
         vertex_threshold: float = 0.5,
         edge_threshold: float = 0.5
     ):
@@ -39,10 +39,18 @@ class ShapeDetector:
             num_colors: Number of color channels
             max_instances: Maximum number of instances model can detect
             num_shape_classes: Number of shape classes
-            device: Device to run inference on
+            device: Device to run inference on (None=auto-detect MPS/CUDA/CPU)
             vertex_threshold: Threshold for vertex detection (0-1)
             edge_threshold: Threshold for edge detection (0-1)
         """
+        # Auto-detect device if not specified: MPS (Apple Metal) > CUDA (NVIDIA) > CPU
+        if device is None:
+            if torch.backends.mps.is_available():
+                device = 'mps'
+            elif torch.cuda.is_available():
+                device = 'cuda'
+            else:
+                device = 'cpu'
         self.device = device
         self.num_colors = num_colors
         self.max_instances = max_instances

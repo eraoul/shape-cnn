@@ -423,7 +423,13 @@ def main():
         'shape_class': 1.5,  # Moderately higher (was 3.0)
     }
 
-    DEVICE = 'cuda' if torch.cuda.is_available() else 'cpu'
+    # Device selection: MPS (Apple Metal) > CUDA (NVIDIA) > CPU
+    if torch.backends.mps.is_available():
+        DEVICE = 'mps'
+    elif torch.cuda.is_available():
+        DEVICE = 'cuda'
+    else:
+        DEVICE = 'cpu'
     print(f"Using device: {DEVICE}")
 
     # Generate or load datasets
