@@ -20,7 +20,7 @@ from skimage.draw import line as draw_line, polygon as draw_polygon
 import pickle
 from typing import Dict, List, Tuple, Optional
 import math
-
+import os
 
 SHAPE_CLASSES = {
     'background': 0,
