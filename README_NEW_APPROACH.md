@@ -137,6 +137,13 @@ Configuration (in `train_unet.py`):
 - Learning rate: 1e-3 with ReduceLROnPlateau
 - Epochs: 50
 
+**GPU Acceleration**:
+- **Mac (Apple Silicon)**: Automatically uses Metal Performance Shaders (MPS) for GPU acceleration
+- **NVIDIA GPUs**: Automatically uses CUDA if available
+- **CPU Fallback**: Uses CPU if no GPU is available
+
+The code automatically detects and uses the best available device.
+
 ### 3. Run Inference
 
 ```python
